@@ -1,10 +1,12 @@
 ﻿//using ConectarDatos;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using Testapi;
 
 namespace Testapi.Controllers
 {
@@ -15,17 +17,17 @@ namespace Testapi.Controllers
 
         //Visualiza todos los registros de tbl customer que esten activos RegCanceled = false (api/customer)
         [HttpGet]
-        public IEnumerable<Customer> Get()
+        public IEnumerable<Customer> GetAll()
         {
 
-           
-                var result = (from a in db.Customer
-                              where a.RegCanceled == false
-                              select a).ToList();
 
-                return result;
-                
-            
+            var result = (from a in db.Ticket
+                          where a.RegCanceled == false
+                          select a).ToList();
+
+            return db.Customer.ToList();
+
+
 
         }
 
@@ -33,45 +35,45 @@ namespace Testapi.Controllers
         [HttpGet]
         public Customer Get(int id)
         {
-            
-           return db.Customer.Find(id);
-          
+
+            return db.Customer.Find(id);
+
         }
 
         //Graba nuevos registros en la tbl customer
         [HttpPost]
-        public IHttpActionResult AddCustomer([FromBody]Customer data)
+        public IHttpActionResult AddCustomer([FromBody] Customer data)
         {
-            
-                if (ModelState.IsValid)
-                {
-                    db.Customer.Add(data);
-                    db.SaveChanges();
-                    return Ok(data);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            
+
+            if (ModelState.IsValid)
+            {
+                db.Customer.Add(data);
+                db.SaveChanges();
+                return Ok(data);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
         //Actualiza un registro en la tbl customer
         [HttpPut]
-        public IHttpActionResult UpdateCustomer(int id, [FromBody]Customer data)
+        public IHttpActionResult UpdateCustomer(int id, [FromBody] Customer data)
         {
-            
-                if (ModelState.IsValid)
-                {
-                    db.Entry(data).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(data).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
         //Elimina un registro en la tbl customer   RegCanceled = true
@@ -83,7 +85,7 @@ namespace Testapi.Controllers
             tblCustomer.RegCanceled = true;
             db.SaveChanges();
             return Ok();
-            
+
         }
 
 
