@@ -6,21 +6,20 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using Testapi;
-
 namespace Testapi.Controllers
 {
-    public class CustomerController : ApiController
+    public class TicketController : ApiController
     {
         private TestApiEntities db = new TestApiEntities();
 
         //Visualiza todos los registros de tbl customer que esten activos RegCanceled = false (api/customer)
         [HttpGet]
-        public IEnumerable<Customer> GetAll()
+        public IEnumerable<Ticket> GetAll()
         {
 
-            var list  = (from a in db.Customer
-                         where a.RegCanceled == false
-                          select a);
+            var list = (from a in db.Ticket
+                        where a.RegCanceled == false
+                        select a);
 
             return list.ToList();
 
@@ -28,21 +27,21 @@ namespace Testapi.Controllers
 
         //Visualiza los detalles de un registros
         [HttpGet]
-        public Customer Get(int id)
+        public Ticket Get(int id)
         {
 
-            return db.Customer.Find(id);
+            return db.Ticket.Find(id);
 
         }
 
-        //Graba nuevos registros en la tbl customer
+        //Graba nuevos registros en la tbl Ticket
         [HttpPost]
-        public IHttpActionResult AddCustomer([FromBody] Customer data)
+        public IHttpActionResult AddTicket([FromBody] Ticket data)
         {
 
             if (ModelState.IsValid)
             {
-                db.Customer.Add(data);
+                db.Ticket.Add(data);
                 db.SaveChanges();
                 return Ok(data);
             }
@@ -53,9 +52,9 @@ namespace Testapi.Controllers
 
         }
 
-        //Actualiza un registro en la tbl customer
+        //Actualiza un registro en la tbl Ticket
         [HttpPut]
-        public IHttpActionResult UpdateCustomer(int id, [FromBody] Customer data)
+        public IHttpActionResult UpdateTicket(int id, [FromBody] Ticket data)
         {
 
             if (ModelState.IsValid)
@@ -71,19 +70,17 @@ namespace Testapi.Controllers
 
         }
 
-        //Elimina un registro en la tbl customer   RegCanceled = true
+        //Elimina un registro en la tbl Ticket  RegCanceled = true
         [HttpDelete]
         public IHttpActionResult DeleteCustomer(int id)
         {
 
-            var tblCustomer = db.Customer.Find(id);
-            tblCustomer.RegCanceled = true;
+            var tblTicket = db.Ticket.Find(id);
+            tblTicket.RegCanceled = true;
             db.SaveChanges();
             return Ok();
 
         }
 
-
     }
-
 }
